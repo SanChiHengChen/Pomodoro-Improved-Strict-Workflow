@@ -9,7 +9,7 @@ var localizedElements = document.querySelectorAll('[data-i18n]'),
     message;
 for (var i = 0; i < localizedElements.length; i++) {
     el = localizedElements[i];
-    message = Firefox.i18n.getMessage(el.getAttribute('data-i18n'));
+    message = chrome.i18n.getMessage(el.getAttribute('data-i18n'));
 
     // Capitalize first letter if element has attribute data-i18n-caps
     if (el.hasAttribute('data-i18n-caps')) {
@@ -34,7 +34,7 @@ var form = document.getElementById('options-form'),
     timeFormatErrorEl = document.getElementById('time-format-error'),
     goalEl = document.getElementById('goal'),
     shouldNewtabEl = document.getElementById('should-newtab'),
-    background = Firefox.extension.getBackgroundPage(),
+    background = chrome.extension.getBackgroundPage(),
     startCallbacks = {},
     durationEls = {};
 
