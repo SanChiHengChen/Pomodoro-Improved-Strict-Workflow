@@ -1,3 +1,36 @@
+# Pomodoro-Improved(Firefox extension)
+
+A Firefox extension that helps you stay focused by blocking sites during work timers and letting you browse during break timers.
+
+Based on [i207M](https://github.com/i207M)/[Pomodoro-Improved-Strict-Workflow](https://github.com/i207M/Pomodoro-Improved-Strict-Workflow).
+
+Sincere respect to i207M and The GNU General Public License!!
+
+## TODO
+
+- Migrating to Manifest V3
+- Fix a bug about video website (such as Bilibili & YouTube) autoplay the video during the work time when you open video website Tab in a special way (like open video website Tab in History or switch to a video website Tab that once been initiated but not once been actived).
+- Fix the bug of location.split() in options.js
+- Be tolerant of the issue
+
+# Pomodoro-Improved(火狐插件)
+
+本火狐插件, 旨在工作时间阻止网站, 并允许您在休息时间浏览, 进而帮助您保持专注。
+
+本插件基于Microsoft Edge插件 [i207M](https://github.com/i207M)/[Pomodoro-Improved-Strict-Workflow](https://github.com/i207M/Pomodoro-Improved-Strict-Workflow).
+
+向 i207M 同志和 GNU General Public License(GNU GPL 许可证)致以崇高敬意!!
+
+## 下一步开发方向
+
+- 打算向 Manifest V3 迁移
+- 修复视频播放网站在工作时在某些情况下自动播放的bug(我自认为的bug)
+- 修复 options.js 中 location.split 的 bug
+- 欢迎提 issue
+
+***
+# (Original Microsoft Edge extension)
+***
 # Pomodoro-Improved
 
 [![](https://img.shields.io/badge/Edge-Install-blue)](https://microsoftedge.microsoft.com/addons/detail/aglnejhljfcgffkmhafficfaejjbcnji)

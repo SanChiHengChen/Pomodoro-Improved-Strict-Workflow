@@ -5,18 +5,18 @@
 
 // Localize all elements with a data-i18n="message_name" attribute
 var localizedElements = document.querySelectorAll('[data-i18n]'),
-  el,
-  message;
+    el,
+    message;
 for (var i = 0; i < localizedElements.length; i++) {
-  el = localizedElements[i];
-  message = chrome.i18n.getMessage(el.getAttribute('data-i18n'));
+    el = localizedElements[i];
+    message = Firefox.i18n.getMessage(el.getAttribute('data-i18n'));
 
-  // Capitalize first letter if element has attribute data-i18n-caps
-  if (el.hasAttribute('data-i18n-caps')) {
-    message = message.charAt(0).toUpperCase() + message.substr(1);
-  }
+    // Capitalize first letter if element has attribute data-i18n-caps
+    if (el.hasAttribute('data-i18n-caps')) {
+        message = message.charAt(0).toUpperCase() + message.substr(1);
+    }
 
-  el.innerHTML = message;
+    el.innerHTML = message;
 }
 
 /*
@@ -24,19 +24,19 @@ for (var i = 0; i < localizedElements.length; i++) {
 */
 
 var form = document.getElementById('options-form'),
-  siteListEl = document.getElementById('site-list'),
-  whitelistEl = document.getElementById('blacklist-or-whitelist'),
-  showNotificationsEl = document.getElementById('show-notifications'),
-  shouldRingEl = document.getElementById('should-ring'),
-  shouldBGMEl = document.getElementById('should-BGM'),
-  clickRestartsEl = document.getElementById('click-restarts'),
-  saveSuccessfulEl = document.getElementById('save-successful'),
-  timeFormatErrorEl = document.getElementById('time-format-error'),
-  goalEl = document.getElementById('goal'),
-  shouldNewtabEl = document.getElementById('should-newtab'),
-  background = chrome.extension.getBackgroundPage(),
-  startCallbacks = {},
-  durationEls = {};
+    siteListEl = document.getElementById('site-list'),
+    whitelistEl = document.getElementById('blacklist-or-whitelist'),
+    showNotificationsEl = document.getElementById('show-notifications'),
+    shouldRingEl = document.getElementById('should-ring'),
+    shouldBGMEl = document.getElementById('should-BGM'),
+    clickRestartsEl = document.getElementById('click-restarts'),
+    saveSuccessfulEl = document.getElementById('save-successful'),
+    timeFormatErrorEl = document.getElementById('time-format-error'),
+    goalEl = document.getElementById('goal'),
+    shouldNewtabEl = document.getElementById('should-newtab'),
+    background = Firefox.extension.getBackgroundPage(),
+    startCallbacks = {},
+    durationEls = {};
 
 durationEls['work'] = document.getElementById('work-duration');
 durationEls['break'] = document.getElementById('break-duration');
@@ -45,44 +45,44 @@ durationEls['long_break'] = document.getElementById('long-break-duration');
 var TIME_REGEX = /^([0-9]+)(:([0-9]{2}))?$/;
 
 form.onsubmit = function () {
-  console.log('form submitted');
-  var durations = {},
-    durationStr,
-    durationMatch;
+    console.log('form submitted');
+    var durations = {},
+        durationStr,
+        durationMatch;
 
-  for (var key in durationEls) {
-    durationStr = durationEls[key].value;
-    durationMatch = durationStr.match(TIME_REGEX);
-    if (durationMatch) {
-      console.log(durationMatch);
-      durations[key] = 60 * parseInt(durationMatch[1], 10);
-      if (durationMatch[3]) {
-        durations[key] += parseInt(durationMatch[3], 10);
-      }
-    } else {
-      timeFormatErrorEl.className = 'show';
-      return false;
+    for (var key in durationEls) {
+        durationStr = durationEls[key].value;
+        durationMatch = durationStr.match(TIME_REGEX);
+        if (durationMatch) {
+            console.log(durationMatch);
+            durations[key] = 60 * parseInt(durationMatch[1], 10);
+            if (durationMatch[3]) {
+                durations[key] += parseInt(durationMatch[3], 10);
+            }
+        } else {
+            timeFormatErrorEl.className = 'show';
+            return false;
+        }
     }
-  }
 
-  console.log(durations);
+    console.log(durations);
 
-  background.setPrefs({
-    siteList: siteListEl.value.split(/\r?\n/),
-    durations: durations,
-    showNotifications: showNotificationsEl.checked,
-    shouldRing: shouldRingEl.checked,
-    shouldBGM: shouldBGMEl.checked,
-    clickRestarts: clickRestartsEl.checked,
-    whitelist: whitelistEl.selectedIndex == 1,
-    sessions: background.PREFS.sessions,
-    goal: goalEl.value,
-    shouldNewtab: shouldNewtabEl.checked,
-    totalNumber: background.PREFS.totalNumber,
-    totalTime: background.PREFS.totalTime,
-  });
-  saveSuccessfulEl.className = 'show';
-  return false;
+    background.setPrefs({
+        siteList: siteListEl.value.split(/\r?\n/),
+        durations: durations,
+        showNotifications: showNotificationsEl.checked,
+        shouldRing: shouldRingEl.checked,
+        shouldBGM: shouldBGMEl.checked,
+        clickRestarts: clickRestartsEl.checked,
+        whitelist: whitelistEl.selectedIndex == 1,
+        sessions: background.PREFS.sessions,
+        goal: goalEl.value,
+        shouldNewtab: shouldNewtabEl.checked,
+        totalNumber: background.PREFS.totalNumber,
+        totalTime: background.PREFS.totalTime,
+    });
+    saveSuccessfulEl.className = 'show';
+    return false;
 };
 
 siteListEl.onfocus = formAltered;
@@ -95,8 +95,8 @@ whitelistEl.onchange = formAltered;
 shouldNewtabEl.onchange = formAltered;
 
 function formAltered() {
-  saveSuccessfulEl.removeAttribute('class');
-  timeFormatErrorEl.removeAttribute('class');
+    saveSuccessfulEl.removeAttribute('class');
+    timeFormatErrorEl.removeAttribute('class');
 }
 
 siteListEl.value = background.PREFS.siteList.join('\n');
@@ -110,57 +110,57 @@ whitelistEl.selectedIndex = background.PREFS.whitelist ? 1 : 0;
 
 var duration, minutes, seconds;
 for (var key in durationEls) {
-  duration = background.PREFS.durations[key];
-  seconds = duration % 60;
-  minutes = (duration - seconds) / 60;
-  if (seconds >= 10) {
-    durationEls[key].value = minutes + ':' + seconds;
-  } else if (seconds > 0) {
-    durationEls[key].value = minutes + ':0' + seconds;
-  } else {
-    durationEls[key].value = minutes;
-  }
-  durationEls[key].onfocus = formAltered;
+    duration = background.PREFS.durations[key];
+    seconds = duration % 60;
+    minutes = (duration - seconds) / 60;
+    if (seconds >= 10) {
+        durationEls[key].value = minutes + ':' + seconds;
+    } else if (seconds > 0) {
+        durationEls[key].value = minutes + ':0' + seconds;
+    } else {
+        durationEls[key].value = minutes;
+    }
+    durationEls[key].onfocus = formAltered;
 }
 
 function setInputDisabled(state) {
-  siteListEl.disabled = state;
-  whitelistEl.disabled = state;
-  for (var key in durationEls) {
-    durationEls[key].disabled = state;
-  }
-  goalEl.disabled = state;
+    siteListEl.disabled = state;
+    whitelistEl.disabled = state;
+    for (var key in durationEls) {
+        durationEls[key].disabled = state;
+    }
+    goalEl.disabled = state;
 }
 
 startCallbacks.work = function () {
-  document.body.className = 'work';
-  setInputDisabled(true);
+    document.body.className = 'work';
+    setInputDisabled(true);
 };
 
 startCallbacks.break = function () {
-  document.body.removeAttribute('class');
-  setInputDisabled(false);
+    document.body.removeAttribute('class');
+    setInputDisabled(false);
 };
 
 startCallbacks.long_break = function () {
-  document.body.removeAttribute('class');
-  setInputDisabled(false);
+    document.body.removeAttribute('class');
+    setInputDisabled(false);
 };
 
 var daily_count = document.getElementById('daily-count');
 var session_str = JSON.stringify(background.PREFS.sessions);
 var count_list = session_str
-  .substring(1, session_str.length - 1)
-  .replace(/"/g, '')
-  .replace(/:/g, ': ')
-  .split(',')
-  .sort()
-  .join('<br>');
+    .substring(1, session_str.length - 1)
+    .replace(/"/g, '')
+    .replace(/:/g, ': ')
+    .split(',')
+    .sort()
+    .join('<br>');
 daily_count.innerHTML =
-  `Counter: ${background.PREFS.totalNumber.toFixed(0)}<br>` +
-  `Total time: ${background.PREFS.totalTime.toFixed(0)} min<br>` +
-  count_list;
+    `Counter: ${background.PREFS.totalNumber.toFixed(0)}<br>` +
+    `Total time: ${background.PREFS.totalTime.toFixed(0)} min<br>` +
+    count_list;
 
 if (background.mainPomodoro.mostRecentMode == 'work') {
-  startCallbacks.work();
+    startCallbacks.work();
 }
