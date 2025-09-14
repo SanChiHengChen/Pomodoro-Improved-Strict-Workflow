@@ -1,3 +1,7 @@
+***
+I'm sorry that this extension is a little buggy now (2025.09.14), and I will fix it no later than National Day Vacations(2025.10.1--2025.10.8).
+插件目前略有bug, 近期学业繁重, 我打算国庆期间修好:-)
+***
 # Pomodoro-Improved(Firefox extension)
 
 A Firefox extension that helps you stay focused by blocking sites during work timers and letting you browse during break timers.
