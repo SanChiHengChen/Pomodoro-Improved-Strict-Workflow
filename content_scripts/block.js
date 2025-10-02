@@ -3,8 +3,8 @@
         if (!document.getElementById("pomodoro-extension-overlay")) {
             var overlay = document.createElement("div"),
                 lines = [
-                    chrome.i18n.getMessage("site_blocked_info"),
-                    chrome.i18n.getMessage("site_blocked_motivator"),
+                    browser.i18n.getMessage("site_blocked_info"),
+                    browser.i18n.getMessage("site_blocked_motivator"),
                 ],
                 p,
                 img = document.createElement("img");
@@ -22,7 +22,7 @@
             overlay.style.color = "#000";
             overlay.style.font = "normal normal normal 16px/1 sans-serif";
 
-            img.src = chrome.extension.getURL("resources/icons/work_full.png");
+            img.src = browser.extension.getURL("resources/icons/work_full.png");
             img.style.marginBottom = "1em";
             overlay.appendChild(img);
 

@@ -67,7 +67,7 @@ function loadPrefs() {
         return updatePrefsFormat(JSON.parse(localStorage['prefs']));
     } else {
         setTimeout(
-            () => chrome.tabs.create({ url: 'options.html', active: true }),
+            () => browser.tabs.create({ url: 'options.html', active: true }),
             1000
         );
         return savePrefs(defaultPrefs());
@@ -271,6 +271,12 @@ function locationsMatch(location, listedPattern) {
 function parseLocation(location) {
     var components = location.split('/');
     return { domain: components.shift(), path: components.join('/') };
+    /*
+    about:debugging#/runtime/this-firefox
+    https://www.bilibili.com/opus/718977542702235906?spm_id_from=333.1365.0.0
+    https, www.bilibili.com/opus/718977542702235906?spm_id_from=333.1365.0.0
+    www.bilibili.com, opus, 718977542702235906?spm_id_from=333.1365.0.0
+    */
 }
 
 function pathsMatch(test, against) {
@@ -334,18 +340,30 @@ function isLocationBlocked(location) {
 }
 
 function executeInTabIfBlocked(action, tab) {
-    var file = 'content_scripts/' + action + '.js',
-        location;
-    location = tab.url.split('://');
-    location = parseLocation(location[1]);
+    var file = 'content_scripts/' + action + '.js', location;
+    // Maybe some url does not contains '://'
+    if (tab.url.includes('://')) {
+        location = tab.url.split('://');
+        console.log('if breach before split\n');
+        console.log(location);
+        location = parseLocation(location[1]);
+    }
+    else {
+        console.log('else breach before split\n');
+        console.log(location);
+        location = parseLocation(tab.url);
+    }
+
+    console.log('after split\n');
+    console.log(location);
 
     if (location.domain !== '' && isLocationBlocked(location)) {
-        chrome.tabs.executeScript(tab.id, { file: file });
+        browser.tabs.executeScript(tab.id, { file: file });
     }
 }
 
 function executeInAllBlockedTabs(action) {
-    chrome.windows.getAll({ populate: true }, function (windows) {
+    browser.windows.getAll({ populate: true }, function (windows) {
         var tabs;
         for (var i in windows) {
             tabs = windows[i].tabs;
@@ -408,19 +426,19 @@ var notification,
                     BGM.pause();
                 }
 
-                chrome.browserAction.setIcon({
+                browser.browserAction.setIcon({
                     path: ICONS.ACTION.PENDING[getIconMode(timer.pomodoro.nextMode)],
                 });
-                chrome.browserAction.setBadgeText({ text: '' });
+                browser.browserAction.setBadgeText({ text: '' });
 
                 if (PREFS.showNotifications) {
-                    var nextModeName = chrome.i18n.getMessage(timer.pomodoro.nextMode);
-                    chrome.notifications.create(
+                    var nextModeName = browser.i18n.getMessage(timer.pomodoro.nextMode);
+                    browser.notifications.create(
                         'notification',
                         {
                             type: 'basic',
-                            title: chrome.i18n.getMessage('timer_end_notification_header'),
-                            message: chrome.i18n.getMessage(
+                            title: browser.i18n.getMessage('timer_end_notification_header'),
+                            message: browser.i18n.getMessage(
                                 'timer_end_notification_body',
                                 nextModeName
                             ),
@@ -429,9 +447,9 @@ var notification,
                         },
                         function () { }
                     );
-                    chrome.notifications.onClicked.addListener(function () {
+                    browser.notifications.onClicked.addListener(function () {
                         startPomodoro();
-                        chrome.notifications.clear('notification');
+                        browser.notifications.clear('notification');
                     });
                 }
 
@@ -442,14 +460,14 @@ var notification,
                 if (PREFS.shouldNewtab) {
                     console.log('open new tab');
                     // OPEN NEW TAB
-                    chrome.tabs.create({ url: 'modules/notice.html', active: true });
+                    browser.tabs.create({ url: 'modules/notice.html', active: true });
                 }
             },
             onStart: function (timer) {
-                chrome.browserAction.setIcon({
+                browser.browserAction.setIcon({
                     path: ICONS.ACTION.CURRENT[getIconMode(timer.type)],
                 });
-                chrome.browserAction.setBadgeBackgroundColor({
+                browser.browserAction.setBadgeBackgroundColor({
                     color: BADGE_BACKGROUND_COLORS[getIconMode(timer.type)],
                 });
                 if (timer.type == 'work') {
@@ -458,7 +476,7 @@ var notification,
                     executeInAllBlockedTabs('unblock');
                 }
                 if (notification) notification.cancel();
-                var tabViews = chrome.extension.getViews({ type: 'tab' }),
+                var tabViews = browser.extension.getViews({ type: 'tab' }),
                     tab;
                 for (var i in tabViews) {
                     tab = tabViews[i];
@@ -473,7 +491,7 @@ var notification,
                 }
             },
             onTick: function (timer) {
-                chrome.browserAction.setBadgeText({
+                browser.browserAction.setBadgeText({
                     text: timer.timeRemainingString(),
                 });
             },
@@ -484,7 +502,7 @@ function getIconMode(timerState) {
     return timerState == 'work' ? 'work' : 'break';
 }
 
-chrome.browserAction.onClicked.addListener(function () {
+browser.browserAction.onClicked.addListener(function () {
     startPomodoro();
 });
 
@@ -511,17 +529,17 @@ function session_clear(key) {
 }
 /* eslint-enable */
 
-chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (mainPomodoro.mostRecentMode == 'work') {
         executeInTabIfBlocked('block', tab);
     }
 });
 
-chrome.notifications.onClicked.addListener(function () {
+browser.notifications.onClicked.addListener(function () {
     // Clicking the notification brings you back to Chrome, in whatever window
     // you were last using.
-    chrome.windows.getLastFocused(function (window) {
-        chrome.windows.update(window.id, { focused: true });
+    browser.windows.getLastFocused(function (window) {
+        browser.windows.update(window.id, { focused: true });
     });
 });
 
@@ -535,8 +553,8 @@ var skipModeStrict = function () {
     }
 };
 
-chrome.contextMenus.create({
-    title: chrome.i18n.getMessage('skip'),
+browser.contextMenus.create({
+    title: browser.i18n.getMessage('skip'),
     contexts: ['browser_action'],
     onclick: skipModeStrict,
 });

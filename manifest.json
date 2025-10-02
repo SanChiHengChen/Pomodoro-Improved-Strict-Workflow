@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Pomodoro Improved",
-    "version": "2.2.9",
+    "version": "2.3.0",
     "description": "实践番茄工作法: 工作时屏蔽浪费时间的网站, 休息时允许访问。A Firefox extension that helps you stay focused by blocking sites during work timers and letting you browse during break timers. ",
     "icons": {
         "128": "resources/icons/icon128.png",
