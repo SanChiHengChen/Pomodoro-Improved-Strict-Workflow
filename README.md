@@ -11,7 +11,7 @@ Sincere respect to i207M and The GNU General Public License!!
 - Fix a bug that when both *"Show a notification when a timer finishes"* and *"Open newtab when a timer finishes"* are set up. (In that case, when you click the *notification*, the *newtab* dose not close at the same time)
 - Fix the bug of location.split() in options.js. ✔
 - Fix a bug about video website (such as Bilibili & YouTube) autoplay the video during the work time when you open video website Tab in a special way (like open video website Tab in History or switch to a video website Tab that once been initiated but not once been actived).
-- Be tolerant of the issue. :-)
+- Be tolerant of the issue. 😊
 
 # Pomodoro-Improved(火狐插件)
 
@@ -25,9 +25,9 @@ Sincere respect to i207M and The GNU General Public License!!
 
 - 打算向 Manifest V3 迁移
 - 修复bug: 在 *"倒计时结束时显示新标签页"* 和 *"倒计时结束时在右下角显示通知"* 同时打开时, 用户响应 *右下角通知* 后 *新标签页* 不自动关闭
-- 已修复bug: 在options.js之中location.split()报错的bug ~~(虽然正常用户看不见这个bug也就是了)~~✔
+- 已修复bug: 在options.js之中location.split()报错的bug ~~(虽然正常用户看不见这个bug也就是了)~~ ✔
 - 修复视频播放网站, 在工作时, (以特殊打开方式时)自动播放的bug ~~(我自认为的bug)~~
-- 欢迎提 issue :-)
+- 欢迎提 issue 😊
 
 
 ***
